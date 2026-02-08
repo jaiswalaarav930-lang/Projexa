@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Study Recommendation System</h1>
+        <p>
+            Analyze academic performance and receive personalized study guidance
+            based on previous records.
+        </p>
+    </header>
+
+    <section class="input-section">
+        <form method="POST">
+            <label for="roll_no">Enter Roll Number</label>
+            <input type="number" name="roll_no" id="roll_no" placeholder="e.g. 12" required>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </section>
+
+    {% if result %}
+    <section class="result-section">
+
+        <h2>Student Performance Report</h2>
+
+        <div class="card">
+            <h3>Academic Details</h3>
+            <ul>
+                <li><strong>Roll Number:</strong> {{ result.roll_no }}</li>
+                <li><strong>Math Marks:</strong> {{ result.math }}</li>
+                <li><strong>Physics Marks:</strong> {{ result.physics }}</li>
+                <li><strong>Chemistry Marks:</strong> {{ result.chemistry }}</li>
+                <li><strong>Attendance:</strong> {{ result.attendance }}%</li>
+                <li><strong>Daily Study Hours:</strong> {{ result.study_hours }}</li>
+            </ul>
+        </div>
+
+        <div class="card highlight {{ 'low' if 'Low' in result.prediction else 'high' }}">
+            <h3>Performance Risk Level</h3>
+            <p>{{ result.prediction }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Performance Summary</h3>
+            <p>{{ result.performance }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Weak Subjects</h3>
+            {% if result.weak_subjects %}
+                <ul>
+                    {% for sub in result.weak_subjects %}
+                        <li>{{ sub }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No weak subjects identified.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h3>Study Recommendations</h3>
+            <ul>
+                {% for rec in result.recommendations %}
+                    <li>{{ rec }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </section>
+    {% endif %}
+
+    <footer>
+        <p>
+            This system is developed for academic guidance purposes and provides
+            recommendations based on historical student data.
+        </p>
+    </footer>
+
+</div>
+
+</body>
+</html>
+
+
